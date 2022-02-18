@@ -1,0 +1,281 @@
+<head>
+  <!--
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.14.0/mermaid.min.js"></script> 我開發時的版本
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script> 使用最後一個版本
+-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.14.0/mermaid.min.js"></script>
+  <style>
+    summary {
+      display: inline; /* 取消details的箭號 */
+    }
+
+    .myStyleMuted {
+      fill: #a6b4cd;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- <details><summary><h1></h1></summary></details> -->
+<details>
+  <summary><h1>FlowChart</h1></summary>
+  <h2><a href="https://mermaid-js.github.io/mermaid/#/flowchart">官方文檔</a></h2>
+  <h2>Example 1: 註解</h2>
+  %% 註釋以 %% 開頭並且獨佔一行.
+  <div class="mermaid">
+    %% 我是註解
+    graph LR
+    %% 我也是註解
+    A -- text --> B --> Stackoverflow -- 其他說明文字 --> myLabel2
+    click Stackoverflow "https://stackoverflow.com/" "some desc when mouse hover" _blank
+    click myLabel2 "https://stackoverflow.com/" "注意hover的文字會在最下方，而不是靠近圖表的地方，圖縮小一點就會看到"
+  </div>
+
+  <h2>Example 2: 標籤 (), [], {}, {{}}</h2>
+  <div class="mermaid">
+    graph TD
+    %% 要用 (), [], {}, {{}} 來括號都可以
+    A[A的標籤名稱] -->|中間文字敘述| B(B的標籤<strong>名稱</strong>)
+    B --> C{{標籤<strong>C</strong>}}
+    %% C{新名稱} -->|One| D[Laptop] 如果這時候又對標籤C的名稱重新定義，最後會以最後一個定義的名稱為主
+    C --> D[Laptop]
+    C -->|Two| E[iPhone]
+    C -->|Three| F[fa:fa-car Car]
+  </div>
+
+  <h2>Example3: click, CSS</h2>
+  <div class="mermaid">
+    %% https://github.com/mermaid-js/mermaid/blob/cbe3a9159db4d5e67d270fe701cd63de1510f6ee/docs/directives.md?plain=1#L10-L48
+    %%{init: { 'logLevel': 'debug', 'theme': 'default' } }%%
+    graph TD
+    HOME[返回index.html] -->|中間文字描述| B{B的標籤說明}
+    B --> C[可以寫HTML...<br>row1<br>go to<br>請善用'br']
+    %% C -->|One| D{{<a href='https://stackoverflow.com/'>go to SO</a>}} 這種寫法在Github上可以
+    C -->|Two| E[iPhone]
+    C -->|Three| Car
+    Car --> MyCar
+    Z --> other{"&lt;a href&#61;&#39;https://google.com&#39;&gt;Google link here&lt;/a&gt;"}
+    Z --> other2{"&lt;a href=&#39;https://google.com&#39;&gt;Google link here&lt;/a&gt;"}
+    click HOME "index.html#link-clicked" "此動作的描述"
+
+    %% 可以呼叫自定義的函數，例如自己寫一個myJSFunc的函數
+    click B myJSFunc "click test"
+
+    %% 定義出新的類別
+    classDef myClass fill:#ffff00
+    %% HOME和C都套用myClass
+    class HOME myClass
+    class C myClass
+  </div>
+</details>
+
+<details>
+  <summary><h1>ClassDiagram</h1></summary>
+  <h2><a href="https://mermaid-js.github.io/mermaid/#/classDiagram">官方文檔</a></h2>
+  <h2>Example 1: class屬性和方法</h2>
+  <div class="mermaid">
+    classDiagram
+    %% 要先定義類別
+    class myCls
+
+    %% 之後才能說明該類別內有那些東西
+    myCls: attr type
+    myCls: attr2 typeXXX
+    myCls: attr3 描述內容
+    myCls: +attr3 用+來表示public
+    myCls: -attr-private
+    myCls: #attr-protected
+    myCls: $attr-package/internal
+    myCls: +method1(arg1, arg2 string) error
+    myCls: +method1(arg1 arg2)
+  </div>
+
+  <h2>Example 2: click or callback</h2>
+  <div class="mermaid">
+    classDiagram
+    class Shape
+    %% ↓ 呼叫自定義的函數需要 securityLevel=loose
+    callback Shape "myCallbackFunc" "點擊後會自動觸發該函數 使用callback"
+    class Shape2
+    click Shape2 call myCallbackFunc() "點擊後會自動觸發該函數 使用click (我偏向這個用法) 預設參數為此classID名稱"
+    %% click myCls call myCallbackFunc('hello world') "desc." 也可以直接指定參數
+  </div>
+
+  <h2>Example 3: Relationship-1</h2>
+  <div class="mermaid">
+    %% 語法: [classA][Arrow][ClassB]:LabelText
+    %% <|-- Inheritance
+    %% *-- Composition
+    %% o-- Aggregation
+    %% --> Association
+    %% -- Link (Solid)
+    %% ..> Dependency
+    %% ..|> Realization
+    %% .. Link (Dashed)
+    classDiagram
+    classA <|-- classB
+    classC *-- classD
+    classE o-- classF
+    classG <-- classH
+    classI -- classJ
+    classK <.. classL
+    classM <|.. classN
+    classO .. classP
+  </div>
+
+  <h2>Example 3-2: Relationship-2: 中間敘述</h2>
+  <div class="mermaid">
+    classDiagram
+    classA <|-- classB : Inheritance
+    classC *-- classD: Composition
+    classE o-- classF: Aggregation
+    classG <-- classH: Association
+    classI -- classJ: Link (Solid)
+    classK <.. classL: Dependency
+    classM <|.. classN: Realization
+    classO .. classP: Link (Dashed)
+    classAA <|-- classBB : 中間文字隨便放
+  </div>
+
+  <h2>Example 4: 推薦寫法</h2>
+  <div class="mermaid">
+    classDiagram
+    %% 用 { 可以直接省略class的名稱，但style似乎是另一個，你會發現method最底下超出外框了
+    class 我的連結 {
+    attr type
+    attr2 typeXXX
+    attr3 描述內容
+    +attr3 用+來表示public
+    -attr-private
+    #attr-protected
+    $attr-package/internal
+    +method1(arg1, arg2 string) (string error)
+    +method2(arg1 arg2)
+    }
+    link 我的連結 "http://www.github.com" "This is a link"
+  </div>
+</details>
+
+<details>
+  <summary><h1>Gantt</h1></summary>
+  <h2><a href="https://mermaid-js.github.io/mermaid/#/gantt">官方文檔</a></h2>
+  <h2>Example1</h2>
+  <div class="mermaid">
+    gantt
+    %% 當前的時間會是紅線標示的位置: 您可以修改class即可開始或關閉: today stroke-width:5px,stroke:#0f0,opacity:0.5
+    title 標題文字
+    dateFormat YYYY-MM-DD
+    %% axisFormat為選用: https://mermaid-js.github.io/mermaid/#/gantt?id=output-date-format-on-the-axis
+    axisFormat %m-%d
+    %% excludes為選用 (會用灰色標籤標示出來)
+    excludes 2022-02-21,2022-02-23,2022-02-25
+    %% 如果只有一個section其實就可以省略
+    section 區域1
+    任務1 :a1, 2022-02-20, 30d
+    任務2 :after a1 , 20d
+    section 列2
+    任務1 : 2022-02-17 , 12d
+    %% 可以不給label預設會直接放在該任務之後
+    任務2 : 24d
+
+    section 程式開發
+    Initial milestone : milestone, mStart, 2022-02-17
+    %% 在label之前可以加上關鍵字 active, crit, milestone, done等等，實質上這些都是增加該class而已
+    資源蒐集: crit, dataCollect, 2022-02-17, 4w
+    需求訪談: 2022-02-28, 5d
+    %% 前置部屬完成回報: crit, preEnd, after dataCollect, 6h
+    前置部屬完成回報: preEnd, after dataCollect, 6h
+    休息 :done, 1w
+    %% 休息2 :done myStyleMuted, 2d 不建議這樣用
+    軟體設計: crit, done, 5d
+
+    %% milestone的位置: (start+end)/2
+    %% Final milestone : milestone, mEnd, 2022-04-17, 2022-05-17
+    %% 設置一個很短的結束時間，這樣milestone就會很像只有該天
+    %% Final milestone : milestone, mEnd, 2022-04-17, 1min
+    Final milestone : milestone, mEnd, 2022-04-17, 0d
+
+    click preEnd call printArguments("test1", "test2", test3)
+  </div>
+
+  <h2>Example2: 24h的行程表-1</h2>
+  <div class="mermaid">
+    gantt
+    dateFormat HH:mm
+    axisFormat %H:%M
+    Initial milestone : milestone, m1, 17:00,2min
+    task2 : 10min
+    task3 : active, 5min
+    Final milestone : milestone, m2, 24:00, 0d
+  </div>
+
+  <h2>Example3: Link (auto:id)</h2>
+  <div class="mermaid">
+    gantt
+    dateFormat HH:mm
+    axisFormat %H:%M
+    %% id: task1 如果沒有給定id預設會用taskN來表示，其中N為第幾個項目
+    Job1: 19:00, 5min
+    %% id: task2 在沒給定label(也就是id)的情況下，不允許使用空白
+    click_me : 5min
+    endNode : milestone, m, 20:00, 0min
+    click task2 call myJSFunc()
+    click task1 href "https://stackoverflow.com/"
+  </div>
+
+  <h2>Example3: Link (set-id)</h2>
+  <div class="mermaid">
+    gantt
+    dateFormat HH:mm
+    axisFormat %H:%M
+    點擊我前往stackoverflow: gotoSO, 19:00, 5min
+    %% click me : debug, after gotoSO,  5min  // 會錯誤，貌似click是關鍵字，不能單放，可以前面隨便加點什麼
+    %% 點 我 !: runMyFunc, 5min   // 如果不加上其他條件，預設會用當前的時間當作開始，所以是當前時間~當前時間+5分鐘，除非用Section或者用milestone的方式，讓它明確的知道與目前時間無關就可以了
+    點 我 !: runMyFunc, after gotoSO, 5min
+    endNode : milestone, m, 20:00, 0min
+    click gotoSO href "https://stackoverflow.com/"
+    click runMyFunc call myJSFunc()
+  </div>
+</details>
+
+</body>
+
+<script>
+  mermaid.initialize({
+    theme: 'forest', // forest綠色為主 dark, base, default
+    logLevel: "fatal", // debug, fatal
+    securityLevel: 'loose', // strict, loose, antiscript, sandbox (使用sandbox會產生出iframe，向github就是用這種方式) // https://github.com/mermaid-js/mermaid/blob/b141f24068e9c5f6979706383a29db6380ffdf31/docs/usage.md?plain=1#L114-L117
+    flowchart: {curve: 'basis'},
+  });
+
+  if (!"自定義該特圖屬性") {
+    mermaid.ganttConfig = {
+      titleTopMargin: 25,
+      barHeight: 20,
+      barGap: 4,
+      topPadding: 75,
+      sidePadding: 75
+    }
+  }
+
+  /**
+   @param {string} nodeId
+   **/
+  function myJSFunc(nodeId) {
+    console.log('clicked', nodeId)
+    const originalBgColor = document.querySelector('body').style.backgroundColor
+    document.querySelector('body').style.backgroundColor = 'yellow'
+    setTimeout(() => {
+      document.querySelector('body').style.backgroundColor = originalBgColor
+    }, 100)
+  }
+
+  function myCallbackFunc() {
+    console.info('A callback was triggered')
+  }
+
+  function printArguments(arg1, arg2, arg3) {
+    console.log(arg1, arg2, arg3)
+  }
+</script>
