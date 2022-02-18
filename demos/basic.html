@@ -1,3 +1,8 @@
+<!--
+特殊符號參考表: https://dev.w3.org/html5/html-author/charref
+Entity codes to escape characters: https://stackoverflow.com/a/71172322/9935654
+-->
+
 <head>
   <!--
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.14.0/mermaid.min.js"></script> 我開發時的版本
@@ -25,9 +30,10 @@
   %% 註釋以 %% 開頭並且獨佔一行.
   <div class="mermaid">
     %% 我是註解
-    graph LR
+    %% graph LR %% 注意不建議用graph使用flowchart對轉譯字元有支持
+    flowchart LR
     %% 我也是註解
-    A -- text --> B --> Stackoverflow -- 其他說明文字 --> myLabel2
+    A -- text --> B --> Stackoverflow -- 其他說明文字 --> myLabel2    %% 註解也可以放到右側
     click Stackoverflow "https://stackoverflow.com/" "some desc when mouse hover" _blank
     click myLabel2 "https://stackoverflow.com/" "注意hover的文字會在最下方，而不是靠近圖表的地方，圖縮小一點就會看到"
   </div>
@@ -67,6 +73,39 @@
     %% HOME和C都套用myClass
     class HOME myClass
     class C myClass
+  </div>
+
+  <h2>Example 4: 善用&</h2>
+  <div class="mermaid">
+    %% flowchart TB也可以，兩者通用
+    graph TB
+    A --> B --> C1 & C2
+    C1 -.-> D
+    C2 --> |msg| D
+    D --> E1 & E2 & E3
+    E1 -->|msg| F
+    E2 & E3 -.-> F
+  </div>
+
+  <h2>Example 5: 鑲嵌HTML以及改變<a href="https://mermaid-js.github.io/mermaid/#/flowchart?id=styling-and-classes">style樣式</a></h2>
+  <div class="mermaid">
+    flowchart TD
+    A[Christmas] -->|Get money| B(Go shopping)
+    %% B:::myCls --> C{Let me think}   正確
+    %% B:::myCls --> C {Let me think}  錯誤，描述的括號要緊接著，中間不能以空白
+    %% B:::myCls --> C:::myCls{Let me think}  錯誤 C:::myCls之後接補語會有問題
+    B:::myCls --> C:::myCls
+    %% 補語可以另外寫
+    C{Let me think}
+    classDef myCls fill:#f96,font-size:20px;
+
+    %% 可以直接寫HTML
+    %% C -->|One| D[<ul style&#61;&#39;list-style-type&#58none&#39;><li>Laptop:Thinkpad</li><li>Tablet: iPad</li></ul>]
+    %% C -->|One| D[<ul style&equals;&apos;list-style-type&colon;none&apos;><li>Laptop:Thinkpad</li><li>Tablet: iPad</li></ul>]
+    %% 以上兩種方法在github上都不適用, 因為它是用: securityLevel:sandbox ，他會直接把所有東西帶入，然後github會轉譯<, " = 等等的符號，所以沒用
+    C -->|One| D[<li>Laptop:Thinkpad</li><li>Tablet: iPad</li>]
+    style D text-align:left,color:blueviolet
+    %% style D color:blueviolet; 不需要隔開，有多個屬性的時候用,即可
   </div>
 </details>
 
@@ -155,6 +194,22 @@
     }
     link 我的連結 "http://www.github.com" "This is a link"
   </div>
+
+  <h2>Example 5: <a href="https://mermaid-js.github.io/mermaid/#/classDiagram?id=styling-a-node">styles</a></h2>
+  <style>
+    .myCSSClass > rect{ /* 預設的theme屬性會蓋過，所以要加上important */
+      fill:#FF0000!important;
+      stroke:#FFFF00!important;
+      stroke-width:4px!important;
+    }
+  </style>
+  <div class="mermaid">
+    classDiagram
+    class Animal:::myCSSClass {
+      -int sizeInFeet
+      -canEat()
+    }
+  </div>
 </details>
 
 <details>
@@ -166,6 +221,9 @@
     %% 當前的時間會是紅線標示的位置: 您可以修改class即可開始或關閉: today stroke-width:5px,stroke:#0f0,opacity:0.5
     title 標題文字
     dateFormat YYYY-MM-DD
+    %% https://mermaid-js.github.io/mermaid/#/gantt?id=today-marker
+    %% todayMarker stroke-width:5px,stroke:#0f0,opacity:0.5
+    todayMarker off
     %% axisFormat為選用: https://mermaid-js.github.io/mermaid/#/gantt?id=output-date-format-on-the-axis
     axisFormat %m-%d
     %% excludes為選用 (會用灰色標籤標示出來)
@@ -227,7 +285,7 @@
   <h2>Example3: Link (set-id)</h2>
   <div class="mermaid">
     gantt
-    dateFormat HH:mm
+    dateFormat HH:mm:
     axisFormat %H:%M
     點擊我前往stackoverflow: gotoSO, 19:00, 5min
     %% click me : debug, after gotoSO,  5min  // 會錯誤，貌似click是關鍵字，不能單放，可以前面隨便加點什麼
@@ -236,6 +294,22 @@
     endNode : milestone, m, 20:00, 0min
     click gotoSO href "https://stackoverflow.com/"
     click runMyFunc call myJSFunc()
+  </div>
+
+  <h2>Example4: 利用milestone來產生開始和結束節點</h2>
+  <div class="mermaid">
+    gantt
+    dateFormat HH:mm
+    axisFormat %H:%M
+    _ : milestone, m, 06:00, 0min
+    _ : milestone, m, 18:00, 0min
+    section daily
+    job1  : 09:00, 2h
+    job2  : 2h
+    job3  : 10:00, 30min
+    section special
+    breakfast: done, 07:30, 30min
+    Lunch :    done, 12:00, 90min
   </div>
 </details>
 
